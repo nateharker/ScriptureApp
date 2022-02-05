@@ -22,6 +22,15 @@ const Scriptures = (function () {
     /*-------------------------------------------------------------------
      *                      CONSTANTS
      */
+    const BOTTOM_PADDING = "<br /><br />";
+    const CLASS_BOOKS = "books";
+    const CLASS_VOLUME = "volume";
+    const DIV_SCRIPTURES_NAVIGATOR = "scripnav";
+    const DIV_SCRIPTURES = "scriptures";
+    const REQUEST_GET = "GET";
+    const REQUEST_STATUS_OK = 200;
+    const REQUEST_STATUS_ERROR = 400;
+    const TAG_HEADERS = "h5";
     const URL_BASE = "https://scriptures.byu.edu/";
     const URL_BOOKS = `${URL_BASE}mapscrip/model/books.php`;
     const URL_VOLUMES = `${URL_BASE}mapscrip/model/volumes.php`;
@@ -39,6 +48,7 @@ const Scriptures = (function () {
     let cacheBooks;
     let init;
     let testGeoplaces;
+    let onHashChanged;
 
     /*-------------------------------------------------------------------
      *                      PRIVATE METHODS
@@ -106,6 +116,10 @@ const Scriptures = (function () {
         });
     };
 
+    onHashChanged = function () {
+        console.log(window.location.hash);
+    };
+
     testGeoplaces = function () {
         const similar = function (number1, number2) {
             return Math.abs(number1 - number2) < 0.0000001;
@@ -163,7 +177,8 @@ const Scriptures = (function () {
      */
     return {
         init,
-        testGeoplaces
+        testGeoplaces,
+        onHashChanged
     };
 
 }());
