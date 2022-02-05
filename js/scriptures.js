@@ -5,18 +5,15 @@ DATE:   Winter 2022
 
 DESCRIPTION: Front end JS code for the Sciprtures, Mapped. 
              IS 542, Winter 2022, BYU.
-
-
 */
 /*jslint
-    browser
+    browser, long
 */
 /*property
-    abs, books, classKey, classkey, content, forEach, hash, href, id, location,
-    log, maxBookId, minBookId, onerror, onload, open, parse, push, response,
-    send, status
+    abs, books, classKey, content, forEach, getElementById, gridName,
+    hash, href, id, innerHTML, length, log, maxBookId, minBookId, numChapters,
+    onerror, onload, open, parse, push, response, send, slice, split, status
 */
-
 
 const Scriptures = (function () {
     "use strict";
@@ -26,13 +23,14 @@ const Scriptures = (function () {
      */
     const BOTTOM_PADDING = "<br /><br />";
     const CLASS_BOOKS = "books";
+    const CLASS_BUTTON = "btn";
     const CLASS_VOLUME = "volume";
     const DIV_SCRIPTURES_NAVIGATOR = "scripnav";
     const DIV_SCRIPTURES = "scriptures";
     const REQUEST_GET = "GET";
     const REQUEST_STATUS_OK = 200;
     const REQUEST_STATUS_ERROR = 400;
-    const TAG_HEADERS = "h5";
+    const TAG_HEADER5 = "h5";
     const URL_BASE = "https://scriptures.byu.edu/";
     const URL_BOOKS = `${URL_BASE}mapscrip/model/books.php`;
     const URL_VOLUMES = `${URL_BASE}mapscrip/model/volumes.php`;
@@ -48,6 +46,8 @@ const Scriptures = (function () {
      */
     let ajax;
     let bookChapterValid;
+    let booksGrid;
+    let booksGridContent;
     let cacheBooks;
     let htmlAnchor;
     let htmlDiv;
@@ -60,6 +60,7 @@ const Scriptures = (function () {
     let navigateHome;
     let onHashChanged;
     let testGeoplaces;
+    let volumesGridContent;
 
 
     /*-------------------------------------------------------------------
@@ -102,6 +103,28 @@ const Scriptures = (function () {
         return true;
     };
 
+    booksGrid = function (volume) {
+        return htmlDiv({
+            classKey: CLASS_BOOKS,
+            content: booksGridContent(volume)
+        });
+    };
+
+    booksGridContent = function (volume) {
+        let gridContent = "";
+
+        volume.books.forEach(function (book) {
+            gridContent += htmlLink({
+                classKey: CLASS_BUTTON,
+                id: book.id,
+                href: `#${volume.id}:${book.id}`,
+                content: book.gridName
+            });
+        });
+
+        return gridContent;
+    };
+
     cacheBooks = function (callback) {
         volumes.forEach(function (volume) {
             let volumeBooks = [];
@@ -130,7 +153,7 @@ const Scriptures = (function () {
         let idString = "";
     
         if (parameters.classKey !== undefined) {
-            classString = ` class="${parameters.classkey}"`;
+            classString = ` class="${parameters.classKey}"`;
         }
         
         if (parameters.content !== undefined) {
@@ -189,6 +212,7 @@ const Scriptures = (function () {
                 cacheBooks(callback);
             }
         });
+
         ajax(URL_VOLUMES, function (data) {
             volumes = data;
             volumesLoaded = true;
@@ -208,12 +232,10 @@ const Scriptures = (function () {
     };
 
     navigateHome = function (volumeId) {
-        document.getElementById(DIV_SCRIPTURES).innerHTML =
-        "<div>Old Testament</div>" +
-        "<div>New Testament</div>" +
-        "<div>Book of Mormon</div>" +
-        "<div>Doctrine and Covenants</div>" +
-        "<div>Pearl of Great Price</div>" + volumeId;
+        document.getElementById(DIV_SCRIPTURES).innerHTML = htmlDiv({
+            id: DIV_SCRIPTURES_NAVIGATOR,
+            content: volumesGridContent(volumeId)
+        });
     };
 
     onHashChanged = function () {
@@ -304,6 +326,23 @@ const Scriptures = (function () {
             { id: 1190, name: "Valley of Lebanon", latitude: 33.416159, longitude: 35.857256 },
             { id: 824, name: "Mount Hermon", latitude: 33.416159, longitude: 35.857256 },
         ]);
+    };
+
+    volumesGridContent = function (volumeId) {
+        let gridContent = "";
+
+        volumes.forEach(function (volume) {
+            if (volumeId === undefined || volumeId === volume.id) {
+                gridContent += htmlDiv({
+                    classKey: CLASS_VOLUME,
+                    content: htmlAnchor(volume) + htmlElement(TAG_HEADER5, volume.fullName)
+                });
+
+                gridContent += booksGrid(volume);
+            }
+        });
+
+        return gridContent;
     };
 
     /*-------------------------------------------------------------------
