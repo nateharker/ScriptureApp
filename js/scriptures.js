@@ -12,9 +12,11 @@ DESCRIPTION: Front end JS code for the Sciprtures, Mapped.
     browser
 */
 /*property
-    books, forEach, init, maxBookId, minBookId, onerror, onload, open, parse,
-    push, response, send, status
+    abs, books, classKey, classkey, content, forEach, hash, href, id, location,
+    log, maxBookId, minBookId, onerror, onload, open, parse, push, response,
+    send, status
 */
+
 
 const Scriptures = (function () {
     "use strict";
@@ -45,15 +47,20 @@ const Scriptures = (function () {
      *                      PRIVATE METHOD DECLARATIONS
      */
     let ajax;
+    let bookChapterValid;
     let cacheBooks;
     let htmlAnchor;
     let htmlDiv;
     let htmlElement;
     let htmlLink;
     let htmlHashLink;
-    let init;
-    let testGeoplaces;
+    let init;    
+    let navigateBook;
+    let navigateChapter;
+    let navigateHome;
     let onHashChanged;
+    let testGeoplaces;
+
 
     /*-------------------------------------------------------------------
      *                      PRIVATE METHODS
@@ -81,6 +88,20 @@ const Scriptures = (function () {
         request.send();
     };
 
+    bookChapterValid = function (bookId, chapter) {
+        let book = books[bookId];
+
+        if (book === undefined || chapter < 0 || chapter > book.numChapters) {
+            return false;
+        }
+
+        if (chapter === 0 && book.numChapters > 0) {
+            return false;
+        }
+
+        return true;
+    };
+
     cacheBooks = function (callback) {
         volumes.forEach(function (volume) {
             let volumeBooks = [];
@@ -101,7 +122,7 @@ const Scriptures = (function () {
 
     htmlAnchor = function (volume) {
         return `<a name="v${volume.id}" />`;
-    }
+    };
     
     htmlDiv = function (parameters) {
         let classString = "";
@@ -125,7 +146,7 @@ const Scriptures = (function () {
     
     htmlElement = function (tagName, content) {
         return `<${tagName}>${content}</${tagName}>`;
-    }
+    };
     
     htmlLink = function (parameters) {
         let classString = "";
@@ -178,8 +199,59 @@ const Scriptures = (function () {
         });
     };
 
+    navigateBook = function(bookId) {
+        console.log("navigateBook " + bookId);
+    };
+
+    navigateChapter = function(bookId, chapter) {
+        console.log("navigateChapter " + bookId + ", " + chapter);
+    };
+
+    navigateHome = function (volumeId) {
+        document.getElementById(DIV_SCRIPTURES).innerHTML =
+        "<div>Old Testament</div>" +
+        "<div>New Testament</div>" +
+        "<div>Book of Mormon</div>" +
+        "<div>Doctrine and Covenants</div>" +
+        "<div>Pearl of Great Price</div>" + volumeId;
+    };
+
     onHashChanged = function () {
-        console.log(window.location.hash);
+        let ids = [];
+
+        if (location.hash !== "" && location.hash.length > 1) {
+            ids = location.hash.slice(1).split(":");
+        }
+
+        if (ids.length <= 0) {
+            navigateHome();
+        } else if (ids.length === 1) {
+            let volumeId = Number(ids[0]);
+
+            if (volumeId < volumes[0].id || volumeId > volumes.slice(-1)[0].id) {
+                navigateHome();
+            } else {
+                navigateHome(volumeId);
+            }
+        } else {
+            let bookId = Number(ids[1]);
+
+            if (books[bookId] == undefined) {
+                navigateHome();
+            } else {
+                if (ids.length == 2) {
+                    navigateBook(bookId);
+                } else {
+                    let chapter = Number(ids[2]);
+
+                    if (bookChapterValid(bookId, chapter)) {
+                        navigateChapter(bookId, chapter);
+                    } else {
+                        navigateHome();
+                    }
+                }
+            }
+        } 
     };
 
     testGeoplaces = function () {
