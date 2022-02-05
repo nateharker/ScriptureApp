@@ -46,6 +46,11 @@ const Scriptures = (function () {
      */
     let ajax;
     let cacheBooks;
+    let htmlAnchor;
+    let htmlDiv;
+    let htmlElement;
+    let htmlLink;
+    let htmlHashLink;
     let init;
     let testGeoplaces;
     let onHashChanged;
@@ -56,10 +61,10 @@ const Scriptures = (function () {
     ajax = function (url, successCallback, failureCallback) {
         let request = new XMLHttpRequest();
 
-        request.open("GET", url, true);
+        request.open(REQUEST_GET, url, true);
 
         request.onload = function () {
-            if (request.status >= 200 && request.status < 400) {
+            if (request.status >= REQUEST_STATUS_OK && request.status < REQUEST_STATUS_ERROR) {
                 let data = JSON.parse(request.response);
 
                 if (typeof successCallback === "function") {
@@ -92,6 +97,63 @@ const Scriptures = (function () {
         if (typeof callback === "function") {
             callback();
         }
+    };
+
+    htmlAnchor = function (volume) {
+        return `<a name="v${volume.id}" />`;
+    }
+    
+    htmlDiv = function (parameters) {
+        let classString = "";
+        let contentString = "";
+        let idString = "";
+    
+        if (parameters.classKey !== undefined) {
+            classString = ` class="${parameters.classkey}"`;
+        }
+        
+        if (parameters.content !== undefined) {
+            contentString = parameters.content;
+        }
+    
+        if (parameters.id !== undefined) {
+            idString = ` id="${parameters.id}"`;
+        }
+    
+        return `<div${idString}${classString}>${contentString}</div>`;
+    };
+    
+    htmlElement = function (tagName, content) {
+        return `<${tagName}>${content}</${tagName}>`;
+    }
+    
+    htmlLink = function (parameters) {
+        let classString = "";
+        let contentString = "";
+        let hrefString = "";
+        let idString = "";
+        
+        if (parameters.classKey !== undefined) {
+            classString = ` class="${parameters.classKey}"`;
+        }
+    
+        if (parameters.content !== undefined) {
+            contentString = parameters.content;
+        }
+    
+        if (parameters.href !== undefined) {
+            hrefString = ` href="${parameters.href}"`;
+        }
+        
+        if (parameters.id !== undefined) {
+            idString = ` id="${parameters.id}"`;
+        }
+    
+        return `<a${idString}${classString}${hrefString}>${contentString}</a>`;
+    };
+    
+    htmlHashLink = function (hashArguments, content) {
+        return `<a href="javascript:void(0)" onclick="changeHash(${hashArguments})">${content}</a>`;
     };
 
     init = function (callback) {
