@@ -249,8 +249,24 @@ const Scriptures = (function () {
     
     getScripturesCallback = function (chapterHtml) {
         let book = books[requestedBookId];
+        let nextChapterList = nextChapter(requestedBookId, requestedChapter);
+        let previousChapterList = previousChapter(requestedBookId, requestedChapter);
+        let divString = "";
 
         document.getElementById(DIV_SCRIPTURES).innerHTML = chapterHtml;
+
+        for (const div of document.getElementsByClassName("navheading")) {
+            divString += "<div class=\"nextprev\">";
+            if (previousChapterList !== undefined){
+                divString += `<a href="#${books[previousChapterList[0]].parentBookId}:${previousChapterList[0]}:${previousChapterList[1]}">Prev</a>`
+            }
+            if (nextChapterList !== undefined) {
+                divString += `| <a href="#${books[nextChapterList[0]].parentBookId}:${nextChapterList[0]}:${nextChapterList[1]}">Next</a>`
+            }
+            divString += "</div>";
+            
+            div.innerHTML += divString;
+        }
 
         if (book !== undefined) {
             injectBreadcrumbs(volumeForId(book.parentBookId), book, requestedChapter);
@@ -474,35 +490,6 @@ const Scriptures = (function () {
         } 
     };
 
-    nextChapter = function (bookId, chapter) {
-        let book = books[bookId];
-
-        if (book !== undefined) {
-            if (chapter < book.numChapters) {
-                return [
-                    bookId,
-                    chapter + 1,
-                    titleForBookChapter(book, chapter + 1)
-                ];
-            }
-            let nextBook = books[bookId + 1];
-
-            if (nextBook !== undefined) {
-                let nextChapterValue = 0;
-
-                if (nextBook.numChapters > 0) {
-                    nextChapterValue = 1;
-                }
-
-                return [
-                    nextBook.id,
-                    nextChapterValue,
-                    titleForBookChapter(nextBook, nextChapterValue)
-                ];
-            }
-        }
-    };
-
     previousChapter = function (bookId, chapter) {
         let book = books[bookId];
 
@@ -542,6 +529,7 @@ const Scriptures = (function () {
                 let latitude = matches[INDEX_LATITUDE];
                 let longitude = matches[INDEX_LONGITUDE];
                 let flag = matches[INDEX_FLAG];
+                let altitude = matches[9];
 
                 if (flag !== "") {
                     placename = `${placename} ${flag}`;
@@ -550,7 +538,8 @@ const Scriptures = (function () {
                 markersList.push({
                     name: placename,
                     latitude,
-                    longitude
+                    longitude,
+                    altitude
                 })
             }
         });
@@ -561,8 +550,16 @@ const Scriptures = (function () {
             addMarker(element.name, element.latitude, element.longitude);
             mapBounds.extend(new google.maps.LatLng(Number(element.latitude), Number(element.longitude)));
         });
-        //NEEDSWORK add if statements to check length of Markers list, 0 show jerusalem, 1 showLocation
-        map.fitBounds(mapBounds);
+
+        if (markersList.length >= 2) {
+            map.fitBounds(mapBounds);
+        } else if (markersList.length === 1) {
+            showLocation(0, markersList[0].name, markersList[0].latitude, markersList[0].longitude, 0, 0, 0, 0, markersList[0].altitude);
+        } else {
+            let center = new google.maps.LatLng(31.7683, 35.2137);
+            map.panTo(center);
+            map.setZoom(8.75);
+        }
     }
 
     showLocation = function (geotagId, placename, latitude, longitude, viewLatitude, viewLongitude, viewTilt, viewRoll, viewAltitude, viewHeading) {
@@ -605,8 +602,6 @@ const Scriptures = (function () {
                     }
                 }
             });
-
-            console.log(uniqueGeoPlaces);
 
             return uniqueGeoPlaces;
         };
