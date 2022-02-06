@@ -29,12 +29,25 @@
         </div>
     </div>
     <div id="content">
-        <div id="scriptures" ></div>
+        <div id="scriptures"></div>
         <div id="map"></div>
     </div>
 
     <script src="js/scriptures.js"></script>
+    <!--I got the following marker with tag script from https://github.com/googlemaps/js-markerwithlabel-->
+    <script src="https://unpkg.com/@googlemaps/markerwithlabel/dist/index.min.js"></script>
     <script type="text/javascript">
+        let map;
+        let showLocation;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 31.7683, lng: 35.2137 },
+                zoom: 8.75,
+                mapTypeId: 'terrain'
+            });
+        }
+
         function ready(readyListener) {
             if (document.readyState !== "loading") {
                 readyListener();
@@ -45,9 +58,12 @@
 
         ready( function () {
             Scriptures.init(() => { Scriptures.onHashChanged(); });
+            showLocation = Scriptures.showLocation;
             window.addEventListener("hashchange", Scriptures.onHashChanged);
         });
 
     </script>
+    <!--Google Maps API-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL9V9Tl6YhbemOUIxeamY8yccZsYk2TWU&callback=initMap" async defer></script>
 </body>
 </html>

@@ -271,3 +271,8 @@ span.verse {
 li.match {
     background-color: #ffffcc;
 }
+
+.labels {
+    font-size: 12pt;
+    background-color: #fcfcddc9;
+}
