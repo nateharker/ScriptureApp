@@ -13,9 +13,11 @@ DESCRIPTION: Front end JS code for the Sciprtures, Mapped.
     console, map
 */
 /*property
-    abs, books, classKey, content, forEach, getElementById, gridName,
-    hash, href, id, innerHTML, length, log, maxBookId, minBookId, numChapters,
-    onerror, onload, open, parse, push, response, send, slice, split, status
+    Animation, DROP, LatLng, MarkerWithLabel, Point, animation, books, classKey,
+    clickable, content, draggable, forEach, fullName, getElementById, gridName,
+    href, id, innerHTML, labelAnchor, labelClass, labelContent, labelStyle, map,
+    maps, maxBookId, minBookId, numChapters, onerror, onload, opacity, open,
+    parse, position, push, response, send, setMap, status
 */
 
 const Scriptures = (function () {
@@ -29,14 +31,14 @@ const Scriptures = (function () {
     const CLASS_BUTTON = "btn";
     const CLASS_CHAPTER = "chapter";
     const CLASS_VOLUME = "volume";
-    const DIV_BREADCRUMBS = "crumbs";
+    const DIV_BREADCRUMBS = "crumb";
     const DIV_SCRIPTURES_NAVIGATOR = "scripnav";
     const DIV_SCRIPTURES = "scriptures";
     const INDEX_PLACENAME = 2;
     const INDEX_FLAG = 11;
     const INDEX_LATITUDE = 3;
     const INDEX_LONGITUDE = 4;
-    const LAT_LON_PARSER = /\((.*),'(.*)',(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),'(.*)'\)/
+    const LAT_LON_PARSER = /\((.*),'(.*)',(.*),(.*),(.*),(.*),(.*),(.*),(.*),(.*),'(.*)'\)/;
     const REQUEST_GET = "GET";
     const REQUEST_STATUS_OK = 200;
     const REQUEST_STATUS_ERROR = 400;
