@@ -263,7 +263,7 @@ const Scriptures = (function () {
                 divString += `<a href="#${books[previousChapterList[0]].parentBookId}:${previousChapterList[0]}:${previousChapterList[1]}">Prev</a>`
             }
             if (nextChapterList !== undefined) {
-                divString += `| <a href="#${books[nextChapterList[0]].parentBookId}:${nextChapterList[0]}:${nextChapterList[1]}">Next</a>`
+                divString += ` | <a href="#${books[nextChapterList[0]].parentBookId}:${nextChapterList[0]}:${nextChapterList[1]}">Next</a>`
             }
             divString += "</div>";
             
