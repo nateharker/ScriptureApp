@@ -12,16 +12,19 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
 
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="apple-touch-icon" href="icon.png">
+    <!--link rel="manifest" href="site.webmanifest"-->
+    <!---link rel="apple-touch-icon" href="icon.png"-->
     <!-- Place favicon.ico in the root directory -->
-
+    <link rel="icon" href="./Map_pin_icon.svg">
     <link rel="stylesheet" href="css/style.css">
 
     <meta name="theme-color" content="#fafafa">
+    <!--Google Maps API-->
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL9V9Tl6YhbemOUIxeamY8yccZsYk2TWU&callback=initMap"></script>
+    <!--I got the following marker with tag script from https://github.com/googlemaps/js-markerwithlabel-->
+    <script defer src="https://unpkg.com/@googlemaps/markerwithlabel/dist/index.min.js"></script>
 </head>
 <body>
-
     <div id="header">
         <div id="crumb"></div>
         <div id="centerhead">
@@ -29,14 +32,11 @@
             <div class="subtitle">By Nathan Harker</div>
         </div>
     </div>
-    <div id="content">
-        <div id="scriptures"></div>
-        <div id="map"></div>
-    </div>
+    <div id="scriptures"></div>
+    <div id="map"></div>
+
 
     <script src="js/scriptures.js"></script>
-    <!--I got the following marker with tag script from https://github.com/googlemaps/js-markerwithlabel-->
-    <script src="https://unpkg.com/@googlemaps/markerwithlabel/dist/index.min.js"></script>
     <script type="text/javascript">
         let map;
         let showLocation;
@@ -64,7 +64,5 @@
         });
 
     </script>
-    <!--Google Maps API-->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL9V9Tl6YhbemOUIxeamY8yccZsYk2TWU&callback=initMap" defer async></script>
 </body>
 </html>
