@@ -4,26 +4,83 @@ html {
     overflow: hidden;
 }
 
-body {
+/* body {
     color: #222;
-    background-color: rgb(236,226,217);
+    background-color: #d9e0e6;
     margin: 0;
     padding: 0;
     min-height: 100%;
     font-weight: bold;
     font-size: 10pt;
+} */
+
+body {
+    color: #222;
+    background-color: #d9e0e6;
+    margin: 0;
+    padding: 0;
+    /* min-height: 100%; */
+    font-weight: bold;
+    font-size: 10pt;
+    /*Grid layout*/
+    display: grid;
+    grid-template-columns: 30% auto;
+    grid-template-rows: 55px auto;
+    grid-template-areas: 
+        "header header"
+        "scriptures map";
+    height: 100vh;
+}
+
+#scriptures {
+    /* min-width: 220px;
+    max-width: 440px;
+    flex: 1 1 30%;
+    height: 100%;
+    min-height: 100%; */
+    /* overflow-x: clip;
+    overflow-y: auto; */
+    border-right: 1px solid #aaa;
+    /* position: relative; */
+    /*Grid layout*/
+    grid-area: scriptures;
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    grid-area: map;
+    /* position: fixed;   NEEDS WORK*/
+}
+
+#header {
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(14,60,96,255);
+    color: white;
+    /* height: 56px; */
+    /* display: flex;
+    flex-direction: row; */
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+    align-items: center;
+    z-index: 10000;
+    font-family:  Inter, sans-serif;
+    /*Grid layout*/
+    grid-area: header;
 }
 
 img {
     max-width: 100%;
 }
 
-#header {
+/* #header {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    background-color: #3f2000;
+    background-color: rgba(14,60,96,255);
     color: white;
     height: 56px;
     display: flex;
@@ -31,7 +88,8 @@ img {
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
     align-items: center;
     z-index: 10000;
-}
+    font-family:  Inter, sans-serif;
+} */
 
 #content {
     position: absolute;
@@ -76,7 +134,7 @@ div.subtitle {
     padding: .5em;
 }
 
-#scriptures {
+/* #scriptures {
     min-width: 220px;
     max-width: 440px;
     flex: 1 1 30%;
@@ -86,23 +144,28 @@ div.subtitle {
     overflow-y: auto;
     border-right: 1px solid #aaa;
     position: relative;
-}
+} */
 
 #scripnav {
-    position: absolute;
+    /* position: absolute; */
     max-height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     width: 100%;
 }
 
-#map {
+/* #map {
     flex: 1 1 70%;
-}
+} */
 
 .volume {
-    padding: .5em;
+    padding: .1em;
     font-size: 12pt;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.315);
+    border-radius: 4px;
+    box-shadow: .5px .5px;
+    font-family:  Inter, sans-serif;
 }
 
 div.books {
@@ -276,3 +339,61 @@ li.match {
     font-size: 12pt;
     background-color: #fcfcddc9;
 }
+
+/*
+* Personal styles
+*/
+
+/*Color Palette:
+Dark Blue: rgba(14,60,96,255)
+Light blue: rgba(62,99,128,255)
+Medium blue: rgba(48,87,120,255)
+Medium dark blue: rgba(35,77,111,255)
+
+*/
+
+.btn {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.315);
+    border-radius: 4px;
+    box-shadow: .5px .5px;
+    font-family:  Inter, sans-serif;
+    padding: .3em;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+}
+
+a.btn {
+    text-decoration: none;
+}
+
+@media (max-width: 600px) {
+    /* Put CSS that is only for small screens here */
+    content {
+        display: flex;
+        flex-direction: column;
+        align-content: stretch;
+    }
+
+    /* body {
+        background-color: red;
+    } */
+
+    body {
+        grid-template-columns: auto;
+        grid-template-rows: 2.5em auto 30%;
+        grid-template-areas: 
+            "header"
+            "map"
+            "scriptures";
+    }
+
+}
+
+@media (min-width: 601px) {
+    /* Put CSS that is only for large screens here */
+
+}
+

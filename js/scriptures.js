@@ -248,6 +248,42 @@ const Scriptures = (function () {
             return `${URL_SCRIPTURES}?book=${bookId}&chap=${chapter}&verses=${options}`;
         }
     };
+
+    const getData = function (url, successCallback, failureCallback, skipJsonParse) {
+        fetch(url).then(function (response) {
+            if (response.ok) {
+                if (skipJsonParse) {
+                    return response.text();
+                } else {
+                    return response.json();
+                }
+            }
+
+            throw new Error("Network response was not okay.");
+        }).then(function (data) {
+            if  (typeof successCallback === "function") {
+                successCallback(data);
+            } else {
+                throw new Error("Callback is not a valid function.");
+            }
+        }).catch(function (error) {
+            console.log("Error:", error.message);
+
+            if (typeof failureCallback === "function") {
+                failureCallback(error);
+            }
+        });
+    };
+
+    const getJson = function (url) {
+        return fetch(url).then(function (response) {
+            if (response.ok) {
+                return response.json();
+            }
+
+            throw new Error("Network response was not okay.");
+        });
+    };
     
     getScripturesCallback = function (chapterHtml) {
         let book = books[requestedBookId];
@@ -348,26 +384,16 @@ const Scriptures = (function () {
     };
 
     init = function (callback) {
-        let booksLoaded = false;
-        let volumesLoaded = false;
+        Promise.all([getJson(URL_BOOKS), getJson(URL_VOLUMES)]).then(jsonResults => {
+            let [ booksResult, volumesResult ] = jsonResults
 
-        ajax(URL_BOOKS, function (data) {
-            books = data;
-            booksLoaded = true;
-
-            if (volumesLoaded) {
-                cacheBooks(callback);
-            }
+            books = booksResult;
+            volumes = volumesResult;
+            cacheBooks(callback);
+        }).catch(error => {
+            console.log("Unable to get volumes/books data:", error.message);
         });
 
-        ajax(URL_VOLUMES, function (data) {
-            volumes = data;
-            volumesLoaded = true;
-
-            if (booksLoaded) {
-                cacheBooks(callback);
-            }
-        });
     };
 
     injectBreadcrumbs = function (volume, book, chapter) {
@@ -413,7 +439,7 @@ const Scriptures = (function () {
     navigateChapter = function(bookId, chapter) {
         requestedBookId = bookId;
         requestedChapter = chapter;
-        ajax(encodedScripturesUrlParameters(bookId, chapter), getScripturesCallback, getScripturesFailure, true);
+        getData(encodedScripturesUrlParameters(bookId, chapter), getScripturesCallback, getScripturesFailure, true);
     };
 
     navigateHome = function (volumeId) {
